@@ -27,8 +27,11 @@ range参数表示箱子的下限和上限。即横坐标显示的范围，范围
 
 def image_hist(image):
     color = ('blue', 'green', 'red')  #图像三通道
+    temp=1
     for i, color in enumerate(color):
         hist = cv.calcHist([image], [i], None, [256], [0, 256]) #绘制各个通道的直方图
+        plt.subplot(31*10+temp)
+        temp+=1
         plt.plot(hist, color=color) #定义线的颜色
         plt.xlim([0, 256]) #x轴的范围
     plt.show()
@@ -52,7 +55,7 @@ hist参数表示计算出来的直方图。
 """
 
 
-src = cv.imread("F:/images/lena.png")
+src = cv.imread("09_30_13.jpg")
 cv.namedWindow("input image", cv.WINDOW_AUTOSIZE)
 cv.imshow("input image", src)
 plot_demo(src)
