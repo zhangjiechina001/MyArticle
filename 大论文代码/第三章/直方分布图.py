@@ -55,7 +55,7 @@ hist参数表示计算出来的直方图。
 """
 
 
-src = cv.imread("09_30_13.jpg")
+src = cv.imread("flower.jpg")
 cv.namedWindow("input image")
 cv.imshow("input image", src)
 plot_demo(src)
