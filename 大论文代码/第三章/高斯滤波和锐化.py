@@ -30,9 +30,6 @@ def sharpImg(imgList):
     plt.show()
 
 
-
-
-
 img_cpurce=cv2.imread('gasuss_noise.jpg')
 img_Gauss=cv2.GaussianBlur(img_cpurce,(7,7),0)
 img_Media=cv2.medianBlur(img_cpurce,7)
