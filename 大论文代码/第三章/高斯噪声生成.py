@@ -40,6 +40,7 @@ def gasuss_noise(image, mean=0, var=0.001):
     return out
 
 img=cv2.imread('09_30_13.jpg')
-cv2.imshow('gasuss_noise',gasuss_noise(img))
+cv2.imshow('gasuss_noise',gasuss_noise(img,mean=0,var=0.0001))
+cv2.imshow('sp_noise',sp_noise(img,prob=0.001))
 cv2.imwrite('gasuss_noise.jpg',gasuss_noise(img))
 cv2.waitKey()
