@@ -57,7 +57,7 @@ def dealTime(fun,**kwargs):
     print(str(threshValue))
     return ret
 
-sourceImg=cv.imread('detail.jpg',cv.IMREAD_GRAYSCALE)
+sourceImg=cv.imread('bestimg.jpg',cv.IMREAD_GRAYSCALE)
 # sourceImg = cv.cvtColor(sourceImg, cv.COLOR_BGR2GRAY)
 sourceImgInfo=[sourceImg,0.0]
 #OTSU
