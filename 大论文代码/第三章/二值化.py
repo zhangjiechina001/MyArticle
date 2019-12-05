@@ -1,4 +1,5 @@
 import cv2 as cv
+import datetime
 def threshold_OTSU(image):
     gray = cv.cvtColor(image,cv.COLOR_RGB2GRAY)   #要二值化图像，要先进行灰度化处理
     ret, binary = cv.threshold(gray,0,255,cv.THRESH_BINARY | cv.THRESH_OTSU)
@@ -6,10 +7,21 @@ def threshold_OTSU(image):
     cv.imshow("binary",binary)#显示二值化图像
     cv.waitKey()
 
-def local_threshold(image):
-    gray = cv.cvtColor(image,cv.COLOR_RGB2GRAY)   #要二值化图像，要先进行灰度化处理
+def local_gaussthreshold(image):
+    gray = image
+    start = datetime.datetime.now()
+    dst = cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,25,10)
+    end = datetime.datetime.now()
+    totalMs=(end-start).total_seconds()
+    return [dst,totalMs*1000]
+
+def local_meanthreshold(image):
+    gray = image
+    start = datetime.datetime.now()
     dst = cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_MEAN_C,cv.THRESH_BINARY,25,10)
-    cv.imshow("local_threshold", dst);cv.waitKey()
+    end = datetime.datetime.now()
+    totalMs=(end-start).total_seconds()
+    return [dst,totalMs*1000]
 
 def myowm_threshold(image):
     gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)  # 要二值化图像，要先进行灰度化处理
@@ -26,7 +38,7 @@ def thresholdImg(imgInfoList):
     for imginfo in imgInfoList:
         blurName,imgData,dealTime=imginfo
         i=i+1
-        plt.subplot(1,3,i)
+        plt.subplot(2,3,i)
         plt.imshow(imgData,cmap='gray')
         plt.xticks([])
         plt.yticks([])
@@ -34,7 +46,7 @@ def thresholdImg(imgInfoList):
         plt.title("{0}({1}ms)".format(blurName,str(tempyime)), fontsize=10)
     plt.show()
 
-import datetime
+
 #添加处理时间信息
 def dealTime(fun,**kwargs):
     start=datetime.datetime.now()
@@ -51,8 +63,14 @@ sourceImgInfo=[sourceImg,0.0]
 OTSU_thresh=dealTime(cv.threshold,src=sourceImg,thresh=0,maxval=255,type=cv.THRESH_BINARY | cv.THRESH_OTSU)
 #全局自适应
 global_thresh=dealTime(cv.threshold,src=sourceImg,thresh=0,maxval=255,type=cv.THRESH_BINARY | cv.THRESH_TRIANGLE)
-nameList=['原图','OTSU','全局自适应']
-imgInfoList=[sourceImgInfo,OTSU_thresh,global_thresh]
+#局部高斯平均
+local_thresh=local_gaussthreshold(sourceImg)
+#局部平均
+local_meanthresh=local_gaussthreshold(sourceImg)
+#自定义阀值
+userDefine_thresh=dealTime(cv.threshold,src=sourceImg,thresh=145,maxval=255,type=cv.THRESH_BINARY)
+nameList=['原图','OTSU','全局自适应','局部高斯自适应','局部平均自适应','人工选择']
+imgInfoList=[sourceImgInfo,OTSU_thresh,global_thresh,local_thresh,local_meanthresh,userDefine_thresh]
 fullImgInfoList=[]
 #将信息添加到数组里面
 for i in range(len(nameList)):
