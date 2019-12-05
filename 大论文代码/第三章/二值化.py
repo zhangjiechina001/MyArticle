@@ -10,7 +10,7 @@ def threshold_OTSU(image):
 def local_gaussthreshold(image):
     gray = image
     start = datetime.datetime.now()
-    dst = cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,25,10)
+    dst = cv.adaptiveThreshold(gray,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,cv.THRESH_BINARY,41,10)
     end = datetime.datetime.now()
     totalMs=(end-start).total_seconds()
     return [dst,totalMs*1000]
@@ -43,20 +43,21 @@ def thresholdImg(imgInfoList):
         plt.xticks([])
         plt.yticks([])
         tempyime="%0.3f" % dealTime
-        plt.title("{0}({1}ms)".format(blurName,str(tempyime)), fontsize=10)
+        plt.title("{0}({1}ms)".format(blurName,str(tempyime)), fontsize=20)
     plt.show()
 
 
 #添加处理时间信息
 def dealTime(fun,**kwargs):
     start=datetime.datetime.now()
-    _,imgData=fun(**kwargs)
+    threshValue,imgData=fun(**kwargs)
     end=datetime.datetime.now()
     totalMs=(end-start).total_seconds()
     ret=[imgData,totalMs*1000]
+    print(str(threshValue))
     return ret
 
-sourceImg=cv.imread('09_30_13.jpg',cv.IMREAD_ANYCOLOR)
+sourceImg=cv.imread('detail.jpg',cv.IMREAD_GRAYSCALE)
 # sourceImg = cv.cvtColor(sourceImg, cv.COLOR_BGR2GRAY)
 sourceImgInfo=[sourceImg,0.0]
 #OTSU
@@ -68,7 +69,7 @@ local_thresh=local_gaussthreshold(sourceImg)
 #局部平均
 local_meanthresh=local_gaussthreshold(sourceImg)
 #自定义阀值
-userDefine_thresh=dealTime(cv.threshold,src=sourceImg,thresh=145,maxval=255,type=cv.THRESH_BINARY)
+userDefine_thresh=dealTime(cv.threshold,src=sourceImg,thresh=138,maxval=255,type=cv.THRESH_BINARY)
 nameList=['原图','OTSU','全局自适应','局部高斯自适应','局部平均自适应','人工选择']
 imgInfoList=[sourceImgInfo,OTSU_thresh,global_thresh,local_thresh,local_meanthresh,userDefine_thresh]
 fullImgInfoList=[]
