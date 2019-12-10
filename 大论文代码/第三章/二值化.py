@@ -57,7 +57,7 @@ def dealTime(fun,**kwargs):
     print(str(threshValue))
     return ret
 
-sourceImg=cv.imread('bestimg.jpg',cv.IMREAD_GRAYSCALE)
+sourceImg=cv.imread('09_30_13.jpg',cv.IMREAD_GRAYSCALE)
 # sourceImg = cv.cvtColor(sourceImg, cv.COLOR_BGR2GRAY)
 sourceImgInfo=[sourceImg,0.0]
 #OTSU
@@ -73,6 +73,7 @@ userDefine_thresh=dealTime(cv.threshold,src=sourceImg,thresh=138,maxval=255,type
 nameList=['原图','OTSU','全局自适应','局部高斯自适应','局部平均自适应','人工选择']
 imgInfoList=[sourceImgInfo,OTSU_thresh,global_thresh,local_thresh,local_meanthresh,userDefine_thresh]
 fullImgInfoList=[]
+cv.imwrite('OTSU_binary.png',OTSU_thresh[0])
 #将信息添加到数组里面
 for i in range(len(nameList)):
     imgData,time=imgInfoList[i]
