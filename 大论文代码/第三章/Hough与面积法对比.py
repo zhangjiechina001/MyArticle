@@ -68,7 +68,7 @@ def AreaCircles(img):
     # cv2.imshow('result_img',img)
     return img
 
-img=cv2.imread('09_30_13.jpg')
+img=cv2.imread('09_30_13salt.jpg')
 AreaImgInfo=dealTime(AreaCircles,img=img.copy())
 HoughImgInfo=dealTime(HoughCircles,img=img.copy(),param1=70,param2=80)
 nameList=['面积法','Hough圆检测法']
