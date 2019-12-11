@@ -9,6 +9,7 @@ plt.rcParams['font.sans-serif'] = ['SimHei']  # 显示中文标签
 def calcMax(img):
     h,w,_=img.shape
     kernel=np.ones((h,210),dtype=np.float32)
+    kernel[0:10,:]=0
     result = signal.convolve2d(cv2.cvtColor(img,cv2.COLOR_RGB2GRAY), kernel, 'valid')
     hist=result.ravel()
     ret_max=np.argmax(hist)
@@ -63,6 +64,7 @@ def unflood(img,startTheta,endTheta):# 得到圆形区域的中心坐标
             except Exception as e:
                 except_count = except_count + 1
     print(except_count)
+    unwrapped_img=unwrapped_img[10:unwrapped_height-1,:,:]
     return unwrapped_img
 
 def binary_img(img):
@@ -91,7 +93,7 @@ def last_fun(img):
     cv2.imshow('img_unflood2', img_unflood2)
     img_info1=calcMax(img_unflood1)
     img_info2=calcMax(img_unflood2)
-    # ret_img=unflood_imgPro(img,img_info1,img_info2)
+    ret_img=unflood_imgPro(img,img_info1,img_info2)
     # return ret_img
 
 
