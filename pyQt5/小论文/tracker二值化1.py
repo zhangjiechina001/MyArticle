@@ -17,7 +17,7 @@ def callBack(x):
     src,binary=cv2.threshold(img,x,255,cv2.ADAPTIVE_THRESH_MEAN_C)
     cv2.imshow('binary',binary)
 
-cv2.namedWindow('binary')
+# cv2.namedWindow('binary',cv2.WINDOW_NORMAL)
 cv2.createTrackbar('reszieThreshold','binary',0,255,callBack)
 cv2.waitKey()
 cmd=input()

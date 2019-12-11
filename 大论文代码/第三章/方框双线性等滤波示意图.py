@@ -12,8 +12,10 @@ def blursImg(imgInfoList):
         i=i+1
         plt.subplot(2,3,i)
         plt.imshow(imgData)
-        plt.xticks([])
-        plt.yticks([])
+        # plt.xticks([])
+        # plt.yticks([])
+        plt.xlabel('x轴')
+        plt.ylabel('y轴',fontsize=20)
         tempyime="%0.3f" % dealTime
         plt.title("{0}({1}ms)".format(blurName,str(tempyime)), fontsize=10)
     plt.show()
