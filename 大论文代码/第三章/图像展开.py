@@ -59,7 +59,7 @@ def unFlodImgPro(img,startTheta,endTheta):# 得到圆形区域的中心坐标
     return unwrapped_img
 
 src=cv2.imread('imgSave.jpg')
-retimg=dealTime(unFlodImgPro,img=src,startTheta=0,endTheta=2*math.pi)
+retimg=dealTime(unFlodImgPro,img=src,startTheta=1*math.pi,endTheta=2*math.pi)
 cv2.namedWindow('unFloadImgPro',cv2.WINDOW_NORMAL)
 cv2.imshow('unFloadImgPro',retimg[0])
 print('时间{0}ms'.format(str(retimg[1])))
