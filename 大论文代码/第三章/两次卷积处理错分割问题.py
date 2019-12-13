@@ -110,22 +110,22 @@ def last_fun(img):
     img_info2=calcMax(img_unflood2)
 
     ret_img=unflood_imgPro(img,img_info1,img_info2)
-    ret_img=ret_img[20:,:,:]
+    ret_img=ret_img[10:,:,:]
     return ret_img
 
 
 
 
+if __name__=='__main__':
+    src=cv2.imread('unflood_binary.png')
+    # src=binary_img(src)
+    img_info=dealTime(last_fun,img=src)
+    print('{0}ms'.format(str(img_info[1])))
+    # img=last_fun(src)
+    # cv2.putText(img, '000', (50, 300), font, 1.2, (255, 255, 255), 2)
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    # cv2.putText(img_info[0],"this is flower ",(0,30),font,1,(200,100,255),3,cv2.LINE_AA)
+    # cv2.putText(img_info[0],str(img_info[1]),(50, 300), cv2.FONT_HERSHEY_COMPLEX, 5.0, (255, 255, 255), 2)
+    cv2.imshow('last_img',img_info[0])
 
-src=cv2.imread('unflood_binary.png')
-# src=binary_img(src)
-img_info=dealTime(last_fun,img=src)
-print('{0}ms'.format(str(img_info[1])))
-# img=last_fun(src)
-# cv2.putText(img, '000', (50, 300), font, 1.2, (255, 255, 255), 2)
-font = cv2.FONT_HERSHEY_SIMPLEX
-# cv2.putText(img_info[0],"this is flower ",(0,30),font,1,(200,100,255),3,cv2.LINE_AA)
-# cv2.putText(img_info[0],str(img_info[1]),(50, 300), cv2.FONT_HERSHEY_COMPLEX, 5.0, (255, 255, 255), 2)
-cv2.imshow('last_img',img_info[0])
-
-cv2.waitKey()
+    cv2.waitKey()

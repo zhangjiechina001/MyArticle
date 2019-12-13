@@ -1,0 +1,95 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'E:\大论文\大论文代码\第三章\window\form.ui'
+#
+# Created by: PyQt5 UI code generator 5.13.1
+#
+# WARNING! All changes made in this file will be lost!
+
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+
+class Ui_Form(object):
+    def setupUi(self, Form):
+        Form.setObjectName("Form")
+        Form.resize(1268, 689)
+        self.btn_openImg = QtWidgets.QPushButton(Form)
+        self.btn_openImg.setGeometry(QtCore.QRect(290, 690, 91, 41))
+        self.btn_openImg.setObjectName("btn_openImg")
+        self.btn_destingwishImg = QtWidgets.QPushButton(Form)
+        self.btn_destingwishImg.setGeometry(QtCore.QRect(590, 690, 91, 41))
+        self.btn_destingwishImg.setObjectName("btn_destingwishImg")
+        self.verticalLayoutWidget = QtWidgets.QWidget(Form)
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(60, 60, 371, 281))
+        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.lbl_sourceImg = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.lbl_sourceImg.setObjectName("lbl_sourceImg")
+        self.verticalLayout_2.addWidget(self.lbl_sourceImg)
+        self.verticalLayoutWidget_2 = QtWidgets.QWidget(Form)
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(440, 60, 321, 281))
+        self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.lbl_cutImg = QtWidgets.QLabel(self.verticalLayoutWidget_2)
+        self.lbl_cutImg.setObjectName("lbl_cutImg")
+        self.verticalLayout_3.addWidget(self.lbl_cutImg)
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setGeometry(QtCore.QRect(190, 590, 141, 41))
+        self.pushButton.setObjectName("pushButton")
+        self.widget = QtWidgets.QWidget(Form)
+        self.widget.setGeometry(QtCore.QRect(60, 20, 1131, 31))
+        self.widget.setObjectName("widget")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label_3 = QtWidgets.QLabel(self.widget)
+        self.label_3.setObjectName("label_3")
+        self.horizontalLayout.addWidget(self.label_3)
+        self.label_4 = QtWidgets.QLabel(self.widget)
+        self.label_4.setObjectName("label_4")
+        self.horizontalLayout.addWidget(self.label_4)
+        self.label_5 = QtWidgets.QLabel(self.widget)
+        self.label_5.setObjectName("label_5")
+        self.horizontalLayout.addWidget(self.label_5)
+        self.widget1 = QtWidgets.QWidget(Form)
+        self.widget1.setGeometry(QtCore.QRect(790, 60, 461, 341))
+        self.widget1.setObjectName("widget1")
+        self.gridLayout = QtWidgets.QGridLayout(self.widget1)
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout.setObjectName("gridLayout")
+        self.label_2 = QtWidgets.QLabel(self.widget1)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
+        self.lbl_firstUnflood = QtWidgets.QLabel(self.widget1)
+        self.lbl_firstUnflood.setObjectName("lbl_firstUnflood")
+        self.gridLayout.addWidget(self.lbl_firstUnflood, 1, 0, 1, 1)
+        self.lbl_secondUnflood = QtWidgets.QLabel(self.widget1)
+        self.lbl_secondUnflood.setObjectName("lbl_secondUnflood")
+        self.gridLayout.addWidget(self.lbl_secondUnflood, 1, 1, 1, 1)
+        self.lbl_unfloodInfo = QtWidgets.QLabel(self.widget1)
+        self.lbl_unfloodInfo.setObjectName("lbl_unfloodInfo")
+        self.gridLayout.addWidget(self.lbl_unfloodInfo, 0, 1, 1, 1)
+
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def retranslateUi(self, Form):
+        _translate = QtCore.QCoreApplication.translate
+        Form.setWindowTitle(_translate("Form", "Form"))
+        self.btn_openImg.setText(_translate("Form", "打开图片"))
+        self.btn_destingwishImg.setText(_translate("Form", "开始识别"))
+        self.lbl_sourceImg.setText(_translate("Form", "原图"))
+        self.lbl_cutImg.setText(_translate("Form", "定位分割后"))
+        self.pushButton.setText(_translate("Form", "打开照片"))
+        self.label_3.setText(_translate("Form", "原图"))
+        self.label_4.setText(_translate("Form", "定位分割"))
+        self.label_5.setText(_translate("Form", "金字塔处理"))
+        self.label_2.setText(_translate("Form", "金字塔处理"))
+        self.lbl_firstUnflood.setText(_translate("Form", "第一次展开字符位置"))
+        self.lbl_secondUnflood.setText(_translate("Form", "第二次展开字符位置"))
+        self.lbl_unfloodInfo.setText(_translate("Form", "展开详情"))

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy import signal
 #1.先找到感兴趣圆环区域
 #读取图片
-src=cv2.imread('09_30_40.jpg',cv2.IMREAD_GRAYSCALE)
+src=cv2.imread('09_30_13.jpg',cv2.IMREAD_GRAYSCALE)
 
 #二值化处理
 ret,binary=cv2.threshold(src,87,255,cv2.THRESH_BINARY)
@@ -38,9 +38,11 @@ for i in range(len(contours)):
     if((ratio>0.9)&(ratio<1.1)):
         cv2.drawContours(result_img,contours,i,(255,255,255))
         size=100
+        src = cv2.imread('09_30_40.jpg', cv2.IMREAD_GRAYSCALE)
         src=src[y-size:y+h+size,x-size:x+w+size]
 cv2.imshow('contours',result_img)
 cv2.imwrite('contours.png',result_img)
+cv2.namedWindow('result',cv2.WINDOW_NORMAL)
 cv2.imshow('result',src)
 
 #圆环拉升为矩形
