@@ -31,6 +31,7 @@ def _cutImg(src,readImg):
     #     area=cv2.contourArea(contour)
     #     print('area{0}:{1}'.format(i,str(area)))
     #     i+=1
+    resizeNum=16
 
     for i in range(len(contours)):
         area = cv2.contourArea(contours[i])
