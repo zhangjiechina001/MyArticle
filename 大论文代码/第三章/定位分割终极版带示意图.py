@@ -52,6 +52,32 @@ def getPointAndR(src):
             break
     return circle_point,circle_r,result_img
 
+def unfloodImagePro(img,point,unfloodR,width,startTheta):
+    h, w = img.shape
+    x0, y0 = point
+    unwrapped_width = unfloodR + width  # 展开的最大半径
+    unwrapped_height = width
+    full_width = int(2 * math.pi * unwrapped_width)  # 展开后的长度
+    unflood_width=950
+    unwrapped_img = np.zeros((unwrapped_height, unflood_width), dtype='u1')
+    except_count = 0
+    for j in range(unflood_width):
+        theta = -2 * math.pi * (j / full_width) - startTheta  # 1. 开始位置
+        # theta=theta+0.75*math.pi
+        for i in range(unwrapped_height):
+            unwrapped_radius = unwrapped_width - i  # 2. don't forget
+            x = unwrapped_radius * math.cos(theta) + x0  #
+            y = unwrapped_radius * math.sin(theta) + y0
+            x, y = int(x), int(y)
+            try:
+                if x < 0 or x >= h or y < 0 or y >= w:
+                    continue
+                unwrapped_img[i, j] = img[x, y]
+            except Exception as e:
+                except_count = except_count + 1
+    print('expect count:' + str(except_count))
+    return unwrapped_img
+
 #输入图片，圆心点，展开内半径，展开宽度
 def unfloodImage(img,point,unfloodR,width,startTheta):
     h,w=img.shape
@@ -80,10 +106,10 @@ def unfloodImage(img,point,unfloodR,width,startTheta):
 
 #返回计算极值，开始角度，卷积结果
 def calcMax(img):
-    h,w,_=img.shape
-    kernel=np.ones((h,220),dtype=np.float32)
+    h,w=img.shape
+    kernel=np.ones((h,230),dtype=np.float32)
     # kernel[0:10,:]=0
-    result = signal.convolve2d(cv2.cvtColor(img,cv2.COLOR_RGB2GRAY), kernel, 'valid')
+    result = signal.convolve2d(img, kernel, 'valid')
     hist=result.ravel()
     ret_max=np.max(hist)
     start_position=np.argmax(hist)
@@ -95,21 +121,21 @@ def last_fun(img):
     copyImg=img.copy()
     #两次缩小
     smallImg=reduceImg(img)
-    plt.subplot(2,4,1)
+    plt.subplot(1,3,1)
     plt.imshow(smallImg,cmap='gray')
     plt.xticks([])
     plt.yticks([])
     plt.title("两次缩小图", fontsize=10)
     #二值化
     thresh,binary=binaryImage(smallImg,binary_type=cv2.THRESH_OTSU|cv2.THRESH_BINARY_INV)
-    plt.subplot(2, 4, 2)
+    plt.subplot(1, 3, 2)
     plt.imshow(binary, cmap='gray')
     plt.xticks([])
     plt.yticks([])
     plt.title("二值化阈值：{0}".format(str(thresh)), fontsize=10)
     #提取圆心，半径
     circle_point, circle_r,drawImg=getPointAndR(binary)
-    plt.subplot(2, 4, 3)
+    plt.subplot(1, 3, 3)
     plt.imshow(drawImg,cmap='gray')
     plt.xticks([])
     plt.yticks([])
@@ -120,23 +146,51 @@ def last_fun(img):
     unflood_img1=unfloodImage(smallImg,point=circle_point,unfloodR=circle_r,width=40,startTheta=0)
     unflood_img1 = cv2.Canny(unflood_img1,100,200)
     thresh=0
-    plt.subplot(4,1, 1)
+    plt.subplot(4,1,1)
     plt.imshow(unflood_img1,cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
-    plt.title("第二次展开,thresh:{0}".format(str(thresh)), fontsize=10)
+    # plt.xticks([])
+    # plt.yticks([])
+    plt.title("第一次展开,thresh:{0}".format(str(thresh)), fontsize=10)
+    #绘制直方分布图
+    plt.subplot(4, 1, 2)
+    ret_max1, ret_theta1, hist1=calcMax(unflood_img1)
+    plt.plot(hist1)
+    plt.title('max:{0},theta:{1}'.format(str(ret_max1),str(ret_theta1)),fontsize=10)
+
+
 
     #2.展开角为90°
     unflood_img2=unfloodImage(smallImg,point=circle_point,unfloodR=circle_r,width=40,startTheta=math.pi/2)
     unflood_img2=cv2.Canny(unflood_img2,100,200)
-    plt.subplot(4,1, 2)
+    plt.subplot(4,1,3)
     plt.imshow(unflood_img2,cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
+    # plt.xticks([])
+    # plt.yticks([])
     plt.title("第二次展开,thresh:{0}".format(str(thresh)), fontsize=10)
+
+    # 绘制直方分布图
+    plt.subplot(4, 1, 4)
+    ret_max2, ret_theta2, hist2 = calcMax(unflood_img2)
+    plt.plot(hist2)
+    plt.title('max:{0},theta:{1}'.format(str(ret_max2), str(ret_theta2+math.pi/2)), fontsize=10)
+
+    #确定展开角度
+    plt.figure()
+    # theta=0.0
+    if(ret_max1>ret_max2):
+        theta=ret_theta1
+    else:
+        theta=ret_theta2+math.pi/2
+    #确定大图展开位置
+    # circle_point, circle_r, drawImg
+    point=(circle_point[0]*4,circle_point[1]*4)
+    r=circle_r*4
+    unflood_srcImg=unfloodImagePro(copyImg,point=point,unfloodR=r,width=130,startTheta=theta-0.03)
+    plt.imshow(unflood_srcImg,cmap='gray')
+    plt.title('原图展开{0}'.format(str(theta)),fontsize=10)
     plt.show()
 
 
 if __name__=='__main__':
-    img=cv2.imread('OKPictures//16_55_45.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('NGPictures\\16_16_57.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
