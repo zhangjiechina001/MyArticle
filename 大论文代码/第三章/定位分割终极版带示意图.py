@@ -176,7 +176,7 @@ def last_fun(img):
 
     #确定展开角度
     plt.figure()
-    plt.subplot(3,1,1)
+    plt.subplot(4,1,1)
     # theta=0.0
     if(ret_max1>ret_max2):
         theta=ret_theta1
@@ -186,22 +186,58 @@ def last_fun(img):
     # circle_point, circle_r, drawImg
     point=(circle_point[0]*4,circle_point[1]*4)
     r=circle_r*4
+
+    #看圆的半径，得出型号，一个为109，一个为208,208的字符高度为50左右，109的为80左右
     unflood_srcImg=unfloodImagePro(copyImg,point=point,unfloodR=r,width=130,startTheta=theta-0.03)
+    if(circle_r>204):
+        unflood_srcImg=unflood_srcImg[50:110,:]
+    else:
+        unflood_srcImg=unflood_srcImg[0:100,:]
+
     plt.imshow(unflood_srcImg,cmap='gray')
     plt.title('原图展开{0}'.format(str(theta)),fontsize=10)
 
-    plt.subplot(3, 1, 2)
+    plt.subplot(4, 1, 2)
     thresh,binaryUnfloodImg=binaryImage(unflood_srcImg,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
     plt.imshow(binaryUnfloodImg,cmap='gray')
     plt.title('二值化阈值：{0}'.format(str(thresh)),fontsize=10)
 
-    plt.subplot(3, 1, 3)
-    cannyImg=cv2.Canny(unflood_srcImg,100,200)
-    plt.imshow(cannyImg, cmap='gray')
-    plt.title('Canny阈值,max:{0},min:{1}'.format(100,200), fontsize=10)
+    plt.subplot(4, 1, 3)
+    #形态学处理
+    kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(2,2))
+    dst_img=binaryUnfloodImg
+    # CLOSE先膨胀再腐蚀
+    dst_img = cv2.morphologyEx(dst_img, cv2.MORPH_CLOSE, kernel)
+    # OPEN先腐蚀再膨胀
+    dst_img = cv2.morphologyEx(dst_img, cv2.MORPH_OPEN, kernel)
+    # dst_img=cv2.Canny(dst_img,100,200)
+    plt.imshow(dst_img, cmap='gray')
+    plt.title('形态学开操作:kernel={0}'.format(str((2,2))), fontsize=10)
+
+    plt.subplot(4, 1, 4)
+    #字符切割
+    _, contours, _ = cv2.findContours(dst_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    count=0
+    unflood_srcImg=cv2.cvtColor(unflood_srcImg,cv2.COLOR_GRAY2BGR)
+    #看圆的半径，得出型号，一个为109，一个为208,208的字符高度为50左右，109的为80左右
+    if(circle_r>204):
+        h_thresh=42
+    else:
+        h_thresh=78
+
+    for i in range(len(contours)):
+        area = cv2.contourArea(contours[i])
+        if(area>100):
+            x, y, w, h = cv2.boundingRect(contours[i])
+            if(h>h_thresh):
+                count+=1
+                cv2.rectangle(unflood_srcImg,(x-3,y-3),(x+w+3,y+h+3),color=(255,0,0))
+                print(area)
+    plt.imshow(unflood_srcImg)
+    plt.title('字符定位,共{0}个'.format(str(count)), fontsize=10)
     plt.show()
 
 
 if __name__=='__main__':
-    img=cv2.imread('NGPictures\\16_16_57.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('OKPictures\\09_30_13salt.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
