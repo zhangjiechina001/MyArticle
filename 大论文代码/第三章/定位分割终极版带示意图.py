@@ -241,5 +241,5 @@ def last_fun(img):
 
 
 if __name__=='__main__':
-    img=cv2.imread('OKPictures\\17_29_43.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('OKPictures\\17_30_34.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
