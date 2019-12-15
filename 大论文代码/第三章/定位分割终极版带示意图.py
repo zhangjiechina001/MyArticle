@@ -176,6 +176,7 @@ def last_fun(img):
 
     #确定展开角度
     plt.figure()
+    plt.subplot(3,1,1)
     # theta=0.0
     if(ret_max1>ret_max2):
         theta=ret_theta1
@@ -188,6 +189,16 @@ def last_fun(img):
     unflood_srcImg=unfloodImagePro(copyImg,point=point,unfloodR=r,width=130,startTheta=theta-0.03)
     plt.imshow(unflood_srcImg,cmap='gray')
     plt.title('原图展开{0}'.format(str(theta)),fontsize=10)
+
+    plt.subplot(3, 1, 2)
+    thresh,binaryUnfloodImg=binaryImage(unflood_srcImg,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
+    plt.imshow(binaryUnfloodImg,cmap='gray')
+    plt.title('二值化阈值：{0}'.format(str(thresh)),fontsize=10)
+
+    plt.subplot(3, 1, 3)
+    cannyImg=cv2.Canny(unflood_srcImg,100,200)
+    plt.imshow(cannyImg, cmap='gray')
+    plt.title('Canny阈值,max:{0},min:{1}'.format(100,200), fontsize=10)
     plt.show()
 
 
