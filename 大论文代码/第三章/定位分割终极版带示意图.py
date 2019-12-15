@@ -195,12 +195,14 @@ def last_fun(img):
         unflood_srcImg=unflood_srcImg[0:100,:]
 
     plt.imshow(unflood_srcImg,cmap='gray')
-    plt.title('原图展开{0}'.format(str(theta)),fontsize=10)
+    plt.title('原图展开{0}'.format(str(theta)),fontsize=20)
 
     plt.subplot(4, 1, 2)
-    thresh,binaryUnfloodImg=binaryImage(unflood_srcImg,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
+    binaryUnfloodImg=cv2.adaptiveThreshold(unflood_srcImg,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,blockSize=11,C=10)
+    # cv2.imshow('img',tempimg)
+    # binaryUnfloodImg=binaryImage(unflood_srcImg,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
     plt.imshow(binaryUnfloodImg,cmap='gray')
-    plt.title('二值化阈值：{0}'.format(str(thresh)),fontsize=10)
+    plt.title('局部自适应二值化',fontsize=20)
 
     plt.subplot(4, 1, 3)
     #形态学处理
@@ -212,7 +214,7 @@ def last_fun(img):
     dst_img = cv2.morphologyEx(dst_img, cv2.MORPH_OPEN, kernel)
     # dst_img=cv2.Canny(dst_img,100,200)
     plt.imshow(dst_img, cmap='gray')
-    plt.title('形态学开操作:kernel={0}'.format(str((2,2))), fontsize=10)
+    plt.title('形态学开操作:kernel={0}'.format(str((2,2))), fontsize=20)
 
     plt.subplot(4, 1, 4)
     #字符切割
@@ -234,10 +236,10 @@ def last_fun(img):
                 cv2.rectangle(unflood_srcImg,(x-3,y-3),(x+w+3,y+h+3),color=(255,0,0))
                 print(area)
     plt.imshow(unflood_srcImg)
-    plt.title('字符定位,共{0}个'.format(str(count)), fontsize=10)
+    plt.title('字符定位,共{0}个'.format(str(count)), fontsize=20)
     plt.show()
 
 
 if __name__=='__main__':
-    img=cv2.imread('OKPictures\\09_30_13salt.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('OKPictures\\17_29_43.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
