@@ -174,6 +174,7 @@ def last_fun(img):
     plt.plot(hist2)
     plt.title('max:{0},theta:{1}'.format(str(ret_max2), str(ret_theta2+math.pi/2)), fontsize=10)
 
+    _font_size=20
     #确定展开角度
     plt.figure()
     plt.subplot(4,1,1)
@@ -195,14 +196,14 @@ def last_fun(img):
         unflood_srcImg=unflood_srcImg[0:100,:]
 
     plt.imshow(unflood_srcImg,cmap='gray')
-    plt.title('原图展开{0}'.format(str(theta)),fontsize=20)
+    plt.title('原图展开{0}'.format(str(theta)),fontsize=_font_size)
 
     plt.subplot(4, 1, 2)
     binaryUnfloodImg=cv2.adaptiveThreshold(unflood_srcImg,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,blockSize=11,C=10)
     # cv2.imshow('img',tempimg)
     # binaryUnfloodImg=binaryImage(unflood_srcImg,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
     plt.imshow(binaryUnfloodImg,cmap='gray')
-    plt.title('局部自适应二值化',fontsize=20)
+    plt.title('局部自适应二值化',fontsize=_font_size)
 
     plt.subplot(4, 1, 3)
     #形态学处理
@@ -214,7 +215,7 @@ def last_fun(img):
     dst_img = cv2.morphologyEx(dst_img, cv2.MORPH_OPEN, kernel)
     # dst_img=cv2.Canny(dst_img,100,200)
     plt.imshow(dst_img, cmap='gray')
-    plt.title('形态学开操作:kernel={0}'.format(str((2,2))), fontsize=20)
+    plt.title('形态学开操作:kernel={0}'.format(str((2,2))), fontsize=_font_size)
 
     plt.subplot(4, 1, 4)
     #字符切割
@@ -227,6 +228,7 @@ def last_fun(img):
     else:
         h_thresh=78
 
+    import 第四章.模板匹配算法.formated.模板匹配识别字符 as detect
     for i in range(len(contours)):
         area = cv2.contourArea(contours[i])
         if(area>100):
@@ -235,15 +237,20 @@ def last_fun(img):
                 count+=1
                 cv2.rectangle(unflood_srcImg,(x-3,y-3),(x+w+3,y+h+3),color=(255,0,0))
                 cutNum=2
-                # tempImg=unflood_srcImg[x-cutNum:x+w+cutNum,y-cutNum:y+h+cutNum,:]
+                tempImg=unflood_srcImg[x-cutNum:x+w+cutNum,y-cutNum:y+h+cutNum,:]
                 tempImg=unflood_srcImg[y-cutNum:y+h+cutNum,x-cutNum:x+w+cutNum,:]
-                cv2.imwrite('cutedImg//'+str(i)+'.jpg',tempImg)
-                print(area)
+                tempImg=cv2.cvtColor(tempImg,cv2.COLOR_RGB2GRAY)
+                ret_code=detect.detect_code(tempImg,show_plt=False)
+                unflood_srcImg=cv2.putText(unflood_srcImg,str(ret_code),(x,y+25),cv2.FONT_HERSHEY_COMPLEX,1.5,(255,0,0),2)
+                # _,tempImg=cv2.threshold(tempImg,0,255,cv2.THRESH_BINARY|cv2.THRESH_OTSU)
+                # cv2.imwrite('cutedImg//'+str(i)+'.jpg',tempImg)
+                # print(ret_code)
+    plt.figure()
     plt.imshow(unflood_srcImg)
-    plt.title('字符定位,共{0}个'.format(str(count)), fontsize=20)
+    plt.title('字符定位,共{0}个'.format(str(count)), fontsize=_font_size)
     plt.show()
 
 
 if __name__=='__main__':
-    img=cv2.imread('OKPictures\\17_30_34.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('NGPictures\\16_18_43.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
