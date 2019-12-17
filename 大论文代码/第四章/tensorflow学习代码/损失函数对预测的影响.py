@@ -1,4 +1,4 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 from numpy.random import RandomState
 
 batch_size=8
@@ -13,13 +13,13 @@ loss_more=10
 loss=tf.reduce_sum(tf.where(tf.greater(y,y_),(y-y_)*loss_more,(y_-y)*loss_less))
 
 train_step=tf.train.AdamOptimizer(0.001).minimize(loss)
-
+#生成（0，1）均匀分布的随机数列
 rdm=RandomState(1)
 
 dataset_size=128
-X=rdm.rand(dataset_size,0)
+X=rdm.rand(dataset_size,2)
 
-Y=[[x1+x2+rdm.rand()/10.0] for (x1,x2) in X]
+Y=[[x1+x2+rdm.rand()/10.0-0.05] for (x1,x2) in X]
 
 #训练神经网络
 with tf.Session() as sess:
