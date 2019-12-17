@@ -234,6 +234,10 @@ def last_fun(img):
             if(h>h_thresh):
                 count+=1
                 cv2.rectangle(unflood_srcImg,(x-3,y-3),(x+w+3,y+h+3),color=(255,0,0))
+                cutNum=2
+                # tempImg=unflood_srcImg[x-cutNum:x+w+cutNum,y-cutNum:y+h+cutNum,:]
+                tempImg=unflood_srcImg[y-cutNum:y+h+cutNum,x-cutNum:x+w+cutNum,:]
+                cv2.imwrite('cutedImg//'+str(i)+'.jpg',tempImg)
                 print(area)
     plt.imshow(unflood_srcImg)
     plt.title('字符定位,共{0}个'.format(str(count)), fontsize=20)
