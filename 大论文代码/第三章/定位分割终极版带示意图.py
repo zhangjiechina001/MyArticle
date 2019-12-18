@@ -252,5 +252,5 @@ def last_fun(img):
 
 
 if __name__=='__main__':
-    img=cv2.imread('NGPictures\\16_18_43.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('NGPictures\\16_16_08.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
