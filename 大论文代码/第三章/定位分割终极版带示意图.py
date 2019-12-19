@@ -199,7 +199,7 @@ def last_fun(img):
     plt.title('原图展开{0}'.format(str(theta)),fontsize=_font_size)
 
     plt.subplot(4, 1, 2)
-    binaryUnfloodImg=cv2.adaptiveThreshold(unflood_srcImg,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,blockSize=11,C=10)
+    binaryUnfloodImg=cv2.adaptiveThreshold(unflood_srcImg,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,blockSize=17,C=10)
     # cv2.imshow('img',tempimg)
     # binaryUnfloodImg=binaryImage(unflood_srcImg,cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
     plt.imshow(binaryUnfloodImg,cmap='gray')
@@ -207,7 +207,7 @@ def last_fun(img):
 
     plt.subplot(4, 1, 3)
     #形态学处理
-    kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(2,2))
+    kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
     dst_img=binaryUnfloodImg
     # CLOSE先膨胀再腐蚀
     dst_img = cv2.morphologyEx(dst_img, cv2.MORPH_CLOSE, kernel)
@@ -227,8 +227,9 @@ def last_fun(img):
         h_thresh=42
     else:
         h_thresh=78
-
+    fun='svm'
     import 第四章.模板匹配算法.formated.模板匹配识别字符 as detect
+    import 第四章.svm.svm识别字符模型训练 as svm_detect
     for i in range(len(contours)):
         area = cv2.contourArea(contours[i])
         if(area>100):
@@ -237,11 +238,16 @@ def last_fun(img):
                 count+=1
                 cv2.rectangle(unflood_srcImg,(x-3,y-3),(x+w+3,y+h+3),color=(255,0,0))
                 cutNum=2
-                tempImg=unflood_srcImg[x-cutNum:x+w+cutNum,y-cutNum:y+h+cutNum,:]
+                # tempImg=unflood_srcImg[x-cutNum:x+w+cutNum,y-cutNum:y+h+cutNum,:]
                 tempImg=unflood_srcImg[y-cutNum:y+h+cutNum,x-cutNum:x+w+cutNum,:]
                 tempImg=cv2.cvtColor(tempImg,cv2.COLOR_RGB2GRAY)
-                ret_code=detect.detect_code(tempImg,show_plt=False)
-                unflood_srcImg=cv2.putText(unflood_srcImg,str(ret_code),(x,y+25),cv2.FONT_HERSHEY_COMPLEX,1.5,(255,0,0),2)
+                if fun=='moduel':
+                    ret_code=detect.detect_code(tempImg,show_plt=False)
+                    unflood_srcImg = cv2.putText(unflood_srcImg, str(ret_code), (x, y + 25), cv2.FONT_HERSHEY_COMPLEX,1.5, (255, 0, 0), 2)
+                if fun=='svm':
+                    # if(tempImg!=None):
+                    ret_code=svm_detect.dettect_code(tempImg)
+                    unflood_srcImg=cv2.putText(unflood_srcImg,str(ret_code),(x,y+25),cv2.FONT_HERSHEY_COMPLEX,1.5,(255,0,0),2)
                 # _,tempImg=cv2.threshold(tempImg,0,255,cv2.THRESH_BINARY|cv2.THRESH_OTSU)
                 # cv2.imwrite('cutedImg//'+str(i)+'.jpg',tempImg)
                 # print(ret_code)
@@ -252,5 +258,5 @@ def last_fun(img):
 
 
 if __name__=='__main__':
-    img=cv2.imread('NGPictures\\16_16_08.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('NGPictures\\16_18_08.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)

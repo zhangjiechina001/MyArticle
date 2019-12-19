@@ -31,10 +31,10 @@ for x in X:
     else:
         ax.scatter(a, b,R, marker='^',c='b')
 
-X = np.arange(0, 1, 0.01)
-Y = np.arange(0, 1, 0.01)
+X = np.arange(0, 1, 0.1)
+Y = np.arange(0, 1, 0.1)
 X, Y = np.meshgrid(X, Y)
-R = np.zeros([100,100])
+R = np.zeros([10,10])
 R[:,:]=0.16
 # Z = np.sin(R)
 ax.plot_surface(X, Y, R, rstride=1, cstride=1, cmap=cm.viridis)
