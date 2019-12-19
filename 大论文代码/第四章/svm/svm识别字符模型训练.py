@@ -22,7 +22,7 @@ def readData():
     return data_train, data_test
 
 
-def train(data_train, data_test):
+def train(data_train, data_test,c):
     """
     训练
     :param data_train:
@@ -46,7 +46,7 @@ def train(data_train, data_test):
     # cache_size：float参数 默认为200，指定训练所需要的内存，以MB为单位，默认为200MB。
     # class_weight：字典类型或者‘balance’字符串。默认为None，给每个类别分别设置不同的惩罚参数C，如果没有给，则会给所有类别都给C=1，即前面参数指出的参数C.如果给定参数‘balance’，则使用y的值自动调整与输入数据中的类频率成反比的权重。
     # max_iter ：int参数 默认为-1，最大迭代次数，如果为-1，表示不限制
-    model = svm.SVC(C=0.50, kernel='linear', gamma='auto', decision_function_shape='ovr', cache_size=500)
+    model = svm.SVC(C=c, kernel='linear', gamma='auto', decision_function_shape='ovr', cache_size=500)
 
     model.fit(x_train, y_train)
 
@@ -64,9 +64,16 @@ def eval(x_train, y_train, x_test, y_test):
     :param y_test:
     :return:
     """
+
     model = joblib.load('num_svm.model')
-    print("训练集得分：" + str(model.score(x_train, y_train)))
-    print("测试集得分：" + str(model.score(x_test, y_test)))
+    train_score = model.score(x_train, y_train)
+    test_score = model.score(x_test, y_test)
+    print("训练集得分：" + str(train_score))
+    print("测试集得分：" + str(test_score))
+
+    return train_score,test_score
+
+
 
     # cm_train = metrics.confusion_matrix(y_train, model.predict(x_train))  # 训练集混淆矩阵
     # cm_test = metrics.confusion_matrix(y_test, model.predict(x_test))  # 测试集混淆矩阵
@@ -75,12 +82,18 @@ def eval(x_train, y_train, x_test, y_test):
 import numpy as np
 i=0
 def dettect_code(img):
+    h,w=img.shape
+    if(h<60):
+        img=cv2.resize(img,(85*w//h,85))
     global i
     i=i+1
-    ret, img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-    cv2.imshow(str(i),img)
-    img=cv2.pyrDown(img)
-    _, img = cv2.threshold(img, 10, 1, cv2.THRESH_BINARY)
+    ret, img = cv2.threshold(img, 0, 1, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    # cv2.imshow(str(i),img)
+    # _, img = cv2.threshold(img, 10, 1, cv2.THRESH_BINARY)
+    #金字塔处理的位置很重要
+    #小一点的尺寸一般为45*30
+    #大一点的尺寸一般为80*20
+    img = cv2.pyrDown(img)
     h,w=img.shape
     # size_ratio=h/50
     # newh=50
@@ -98,5 +111,23 @@ def dettect_code(img):
 
 if __name__ == '__main__':
     data_train, data_test = readData()
-    x_train, y_train, x_test, y_test = train(data_train, data_test)
-    eval(x_train, y_train, x_test, y_test)
+
+    # x_train, y_train, x_test, y_test = train(data_train, data_test)
+    # eval(x_train, y_train, x_test, y_test)
+
+    nums=np.linspace(0.1,1,10)
+    train_scores=[]
+    test_scores=[]
+    for num in nums:
+        x_train, y_train, x_test, y_test = train(data_train, data_test,num)
+        train_score,test_score=eval(x_train, y_train, x_test, y_test)
+        train_scores.append(train_score)
+        test_scores.append(test_score)
+
+    import matplotlib.pyplot as plt
+    plt.plot(nums,train_scores)
+    plt.plot(nums, test_scores)
+    plt.show()
+
+
+
