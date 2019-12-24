@@ -1,8 +1,8 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import numpy as np
 import matplotlib.pyplot as plt
 #用numpy生成200个点
-x_data=np.linspace(-0.5,0.5,200)[:,np.newaxis]
+x_data=np.linspace(-0.5,0.5,2000)[:,np.newaxis]
 noise=np.random.normal(0,0.02,x_data.shape)
 y_data=np.square(x_data)+noise
 
@@ -30,9 +30,10 @@ train_step=tf.train.GradientDescentOptimizer(0.1).minimize(loss)
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for step in range(20000):
+    for step in range(10000):
         sess.run(train_step,feed_dict={x:x_data,y:y_data})
-
+        if(step%100==0):
+            print(step,sess.run([weight_l1,weight_l2]))
         #获得预测值
     prediction_value=sess.run(prediction,feed_dict={x:x_data})
     plt.figure()

@@ -21,7 +21,7 @@ def _binaryAndmorphologEx(src):
 
 #分割图，先对二值图进行特征特区，然后在对缘儒进行处理,返回图像的圆心，半径
 def _cutImg(src,readImg):
-    _, contours, _ = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     result_img = np.zeros(src.shape, np.uint8)
     retImg=None
     i=1

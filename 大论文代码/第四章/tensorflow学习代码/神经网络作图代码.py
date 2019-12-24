@@ -133,7 +133,7 @@ def add_mapping(patches, colors, start_ratio, end_ratio, patch_size, ind_bgn,
 
 def label(xy, text, xy_off=[0, 4]):
     plt.text(xy[0] + xy_off[0], xy[1] + xy_off[1], text,
-             family='sans-serif', size=8)
+             family='sans-serif', size=15)
 
 
 if __name__ == '__main__':
