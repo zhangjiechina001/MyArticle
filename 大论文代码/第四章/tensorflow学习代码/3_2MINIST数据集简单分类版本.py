@@ -19,7 +19,7 @@ prediction=tf.nn.softmax(prediction)
 
 loss=tf.reduce_mean(tf.square(y-prediction))
 
-trainstep=tf.train.GradientDescentOptimizer(0.1).minimize(loss)
+trainstep=tf.train.GradientDescentOptimizer(0.2).minimize(loss)
 
 init=tf.global_variables_initializer()
 
@@ -30,3 +30,12 @@ correction=tf.equal(tf.argmax(y,1),tf.argmax(prediction,1))
 accuracy=tf.reduce_mean(tf.cast(correction,tf.float32))
 
 
+with tf.Session() as sess:
+    sess.run(init)
+    for epoch in range(40):
+        for batch in range(n_batch):
+            xs,ys=mnist.train.next_batch(batch_soze)
+            sess.run(trainstep,feed_dict={x:xs,y:ys})
+
+        acc=sess.run(accuracy,feed_dict={x:mnist.test.images,y:mnist.test.labels})
+        print('after {0} trains,accuracy is {1}'.format(str(epoch),str(acc)))
