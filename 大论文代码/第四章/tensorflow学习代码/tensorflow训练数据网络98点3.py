@@ -19,6 +19,7 @@ TRAIN_STEPS=30000
 MOVING_AVERAGE_DECAY=0.99
 
 def inference(input_tensor,avg_class,w1,b1,w2,b2):
+    #输出层使用不使用relu ：0.9816     使用relu:0.9818
     if avg_class==None:
         layers1=tf.nn.relu(tf.matmul(input_tensor,w1)+b1)
         return tf.nn.relu(tf.matmul(layers1,w2)+b2)

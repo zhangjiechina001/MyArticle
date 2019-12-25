@@ -28,7 +28,7 @@ prediction=tf.nn.softmax(prediction)
 global_step=tf.Variable(0,trainable=False)
 
 #可以衡量不同模型的优劣
-cross_entropy=tf.nn.sparse_softmax_cross_entropy_with_logits(logits=prediction,labels=tf.argmax(y,1))
+cross_entropy=tf.nn.softmax_cross_entropy_with_logits(logits=prediction,labels=y)
 cross_entropy_mean=tf.reduce_mean(cross_entropy)
 # loss=tf.reduce_mean(tf.square(y-prediction))
 from tensorflow.contrib import layers
