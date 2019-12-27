@@ -1,2 +1,2 @@
-model_checkpoint_path: "model_full_connection.ckpt"
-all_model_checkpoint_paths: "model_full_connection.ckpt"
+model_checkpoint_path: "moduel_full_connection.ckpt-30000"
+all_model_checkpoint_paths: "moduel_full_connection.ckpt-30000"

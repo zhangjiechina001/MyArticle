@@ -17,7 +17,7 @@ def binaryImage(img,binary_type):
 
 # 提取圆心，半径
 def getPointAndR(src):
-    _, contours, _ = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     result_img = np.zeros(src.shape,np.uint8)
     retImg=None
     i=1
@@ -219,9 +219,10 @@ def last_fun(img):
 
     plt.subplot(4, 1, 4)
     #字符切割
-    _, contours, _ = cv2.findContours(dst_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(dst_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     count=0
     unflood_srcImg=cv2.cvtColor(unflood_srcImg,cv2.COLOR_GRAY2BGR)
+    temp_srcImg=unflood_srcImg.copy()
     #看圆的半径，得出型号，一个为109，一个为208,208的字符高度为50左右，109的为80左右
     code_high=0
     code_size=0
@@ -257,6 +258,10 @@ def last_fun(img):
 
     plt.figure()
     plt.imshow(unflood_srcImg)
+    import time
+    #time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    pic_name='recongnize_history/'+time.strftime("%Y-%m-%d %H_%M_%S", time.localtime())+'.jpg'
+    cv2.imwrite(pic_name,temp_srcImg)
     plt.title('字符定位,共{0}个'.format(str(count)), fontsize=_font_size)
     plt.show()
 

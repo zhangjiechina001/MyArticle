@@ -90,13 +90,27 @@ def train(mnist):
 import cv2
 def detect(img,mnist):
     # img=img[10:90,20:80]
+    img = 255 - img[:, :]
+    _,tempimg=cv2.threshold(img,100,255,cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(tempimg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    for i in range(len(contours)):
+        area=cv2.contourArea(contours[i])
+        if(area>100):
+            cutNum = 3
+            x, y, w, h = cv2.boundingRect(contours[i])
+            img = img[y - cutNum:y + h + cutNum, x - cutNum:x + w + cutNum]
+            break
+
     img=cv2.resize(img,(28,28))
-    img=255-img[:,:]
+
     # kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(2,2))
     # img=cv2.dilate(img,kernel)
     img=(img[:,:]/255).astype('float32')
+    _, img = cv2.threshold(img, 0.2, 1, cv2.THRESH_TOZERO)
+    cv2.namedWindow('image',cv2.WINDOW_NORMAL)
     cv2.imshow('image',img)
     cv2.waitKey()
+
     img=img.reshape(1,28*28)
     with tf.Session() as sess:
         # 载入meta文件
@@ -112,8 +126,10 @@ def detect(img,mnist):
         # keep_prob = graph.get_tensor_by_name('keep_prob:0')
         result = graph.get_tensor_by_name('prediction:0')
         # 这上面的‘data’、‘keep_prob’、‘prediction’都是我们在训练时定义的变量名称
-        prediction=sess.run(result, feed_dict={X: img})
-        print(sess.run(tf.argmax(prediction,1)))
+        # prediction=sess.run(result, feed_dict={X: mnist.test.images[0:30]})
+        prediction = sess.run(result, feed_dict={X: img})
+        # print(sess.run(tf.argmax(mnist.test.labels[0:30],1)))
+        print(sess.run(tf.argmax(prediction, 1)))
         import matplotlib.pyplot as plt
         # 可视化样本，下面是输出了训练集中前20个样本
         fig, ax = plt.subplots(nrows=4, ncols=5, sharex='all', sharey='all')
@@ -130,7 +146,7 @@ def detect(img,mnist):
 def main(argv=None):
     mnist=input_data.read_data_sets('MNIST_data',one_hot=True)
     # train(mnist)
-    img=cv2.imread('formatedImg\\0.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('formatedImg\\6.jpg',cv2.IMREAD_GRAYSCALE)
     detect(img,mnist)
 
 if __name__=='__main__':
