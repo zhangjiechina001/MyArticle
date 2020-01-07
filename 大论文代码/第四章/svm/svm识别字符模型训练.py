@@ -52,7 +52,7 @@ def train(data_train, data_test,c):
 
     # result=model.predict([[6.5,2.8,4.6,1.5]])
     # print(result)
-    joblib.dump(model, 'E:\\大论文\\大论文代码\\第四章\\svm\\num_svm.model')
+    joblib.dump(model, 'num_svm.model')
     return x_train, y_train, x_test, y_test
 
 def eval(x_train, y_train, x_test, y_test):
