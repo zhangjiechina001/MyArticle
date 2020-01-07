@@ -117,6 +117,25 @@ def calcMax(img):
     ret_theta=(start_position/w)*2*np.pi
     return ret_max,ret_theta,hist
 
+def disImgs(img_list):
+    plt.figure()
+    for i in range(12):
+        tempplate = cv2.imread('recongnize_history/bg_img.png',cv2.IMREAD_GRAYSCALE)
+        # img_list[i] = cv2.pyrDown(img_list[i])
+        h,w=img_list[i].shape
+        # tempplate[:,:]=255
+        # img_list[i]=cv2.pyrDown(img_list[i])
+        mask=np.zeros(shape=(100,80),dtype=np.uint8)
+        mask[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w]=255
+        # tempplate[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w] = img_list[i][:, :]
+        # img_list[i]=cv2.resize(tempplate,(26,26))
+        # tempplate[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w]=255
+        plt.subplot(3,4,i+1)
+        src_1=img_list[i]
+        cv2.seamlessClone(src=src_1,dst=tempplate,mask=mask,p=(100//2,80//2), flags=cv2.NORMAL_CLONE)
+        tempplate=cv2.resize(tempplate,(28,28))
+        plt.imshow(tempplate,cmap='gray')
+
 def last_fun(img):
     copyImg=img.copy()
     #两次缩小
@@ -237,17 +256,23 @@ def last_fun(img):
     fun='svm'
     import 第四章.模板匹配算法.formated.模板匹配识别字符 as detect
     import 第四章.svm.svm识别字符模型训练 as svm_detect
+    img_list=[]
     for i in range(len(contours)):
         area = cv2.contourArea(contours[i])
         if(area>100):
             x, y, w, h = cv2.boundingRect(contours[i])
             if(h>h_thresh):
                 count+=1
+                unflood_srcImg_copy=unflood_srcImg.copy()
                 cv2.rectangle(unflood_srcImg,(x-3,y-3),(x+w+3,y+h+3),color=(255,0,0))
                 cutNum=0
                 # tempImg=unflood_srcImg[x-cutNum:x+w+cutNum,y-cutNum:y+h+cutNum,:]
                 tempImg=unflood_srcImg[y-cutNum:y+h+cutNum,x-cutNum:x+w+cutNum,:]
                 tempImg=cv2.cvtColor(tempImg,cv2.COLOR_RGB2GRAY)
+                cutNum=3
+                tempImg_1=unflood_srcImg_copy[y-cutNum:y+h+cutNum,x-cutNum:x+w+cutNum,:]
+                tempImg_1=cv2.cvtColor(tempImg_1,cv2.COLOR_RGB2GRAY)
+                img_list.append(tempImg_1)
                 if fun=='moduel':
                     ret_code=detect.detect_code(tempImg,show_plt=False)
                     unflood_srcImg = cv2.putText(unflood_srcImg, str(ret_code), (x, y + code_high), cv2.FONT_HERSHEY_COMPLEX,code_size, (255, 0, 0), 2)
@@ -255,15 +280,16 @@ def last_fun(img):
                     # if(tempImg.width>0):
                         ret_code=svm_detect.dettect_code(tempImg)
                         unflood_srcImg=cv2.putText(unflood_srcImg,str(ret_code),(x,y+code_high),cv2.FONT_HERSHEY_COMPLEX,code_size,(255,0,0),2)
-
+    disImgs(img_list)
     plt.figure()
     plt.imshow(unflood_srcImg)
     import time
     #time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     pic_name='recongnize_history/'+time.strftime("%Y-%m-%d %H_%M_%S", time.localtime())+'.jpg'
-    cv2.imwrite(pic_name,temp_srcImg)
+    # cv2.imwrite(pic_name,unflood_srcImg)
     plt.title('字符定位,共{0}个'.format(str(count)), fontsize=_font_size)
     plt.show()
+
 
 
 if __name__=='__main__':
