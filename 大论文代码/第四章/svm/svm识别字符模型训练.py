@@ -105,7 +105,7 @@ def dettect_code(img):
     tempplate[(50-h)//2:(50-h)//2+h,(50-w)//2:(50-w)//2+w]=img[:,:]
 
 
-    model = joblib.load('E:\\大论文\\大论文代码\\第四章\\svm\\num_svm.model')
+    model = joblib.load('E:\MyArticle\大论文代码\第四章\svm\\num_svm.model')
     result=model.predict(tempplate.reshape([1,50*50]))
     return result[0]
 
