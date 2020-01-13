@@ -24,9 +24,10 @@ result=clf.predict([[1,0.5]])
 print(result)
 
 draw_x=np.linspace(0,2.1,200)
-y=-1.3*draw_x+2.1
-y1=-1.3*draw_x+2.2
-y2=-1.3*draw_x+2.0
+gradient_a=-0.5
+y=gradient_a*draw_x+1.6
+y1=gradient_a*draw_x+1.5
+y2=gradient_a*draw_x+1.7
 plt.plot(draw_x,y)
 plt.plot(draw_x,y1,linestyle=':')
 plt.plot(draw_x,y2,linestyle=':')

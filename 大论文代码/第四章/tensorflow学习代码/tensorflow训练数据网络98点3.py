@@ -92,7 +92,7 @@ def detect(img,mnist):
     # img=img[10:90,20:80]
     img = 255 - img[:, :]
     _,tempimg=cv2.threshold(img,100,255,cv2.THRESH_BINARY)
-    contours, _ = cv2.findContours(tempimg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _,contours, _ = cv2.findContours(tempimg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     for i in range(len(contours)):
         area=cv2.contourArea(contours[i])
         if(area>100):
@@ -114,9 +114,9 @@ def detect(img,mnist):
     img=img.reshape(1,28*28)
     with tf.Session() as sess:
         # 载入meta文件
-        saver = tf.train.import_meta_graph(r'E:\大论文\大论文代码\第四章\tensorflow学习代码\model_full_connection\moduel_full_connection.ckpt-30000.meta')
+        saver = tf.train.import_meta_graph(r'E:\MyArticle\大论文代码\第四章\tensorflow学习代码\model_full_connection\moduel_full_connection.ckpt-30000.meta')
         # 载入最近的一次保存的模型文件
-        saver.restore(sess, tf.train.latest_checkpoint(r"E:\大论文\大论文代码\第四章\tensorflow学习代码\model_full_connection/"))
+        saver.restore(sess, tf.train.latest_checkpoint(r'E:\MyArticle\大论文代码\第四章\tensorflow学习代码\model_full_connection/'))
         # 建立图
         graph = tf.get_default_graph()
         # 初始化所有的变量
@@ -129,7 +129,7 @@ def detect(img,mnist):
         # prediction=sess.run(result, feed_dict={X: mnist.test.images[0:30]})
         prediction = sess.run(result, feed_dict={X: img})
         # print(sess.run(tf.argmax(mnist.test.labels[0:30],1)))
-        print(sess.run(tf.argmax(prediction, 1)))
+        print(sess.run(tf.argmax(prediction, 1)[0]+1))
         import matplotlib.pyplot as plt
         # 可视化样本，下面是输出了训练集中前20个样本
         fig, ax = plt.subplots(nrows=4, ncols=5, sharex='all', sharey='all')

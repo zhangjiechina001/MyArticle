@@ -17,7 +17,7 @@ def binaryImage(img,binary_type):
 
 # 提取圆心，半径
 def getPointAndR(src):
-    contours, _ = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _,contours,_ = cv2.findContours(src, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     result_img = np.zeros(src.shape,np.uint8)
     retImg=None
     i=1
@@ -116,25 +116,62 @@ def calcMax(img):
     # start_position=start_position[0]
     ret_theta=(start_position/w)*2*np.pi
     return ret_max,ret_theta,hist
+def seamlessCone(im,obj):
+    # # Read images : src image will be cloned into dst
+    # im = cv2.imread("bg_img.png")
+    # obj = cv2.imread("char_1.jpg")
 
+    # Create an all white mask
+    mask = 255 * np.ones(obj.shape, obj.dtype)
+
+    # The location of the center of the src in the dst
+    width, height,channels = im.shape
+    center = (height // 2, width // 2)
+
+    # Seamlessly clone src into dst and put the results in output
+    normal_clone = cv2.seamlessClone(obj, im, mask, center, cv2.NORMAL_CLONE)
+    mixed_clone = cv2.seamlessClone(obj, im, mask, center, cv2.MIXED_CLONE)
+
+    # Write results
+    # cv2.imshow("opencv-normal-clone-example.jpg", normal_clone)
+    # cv2.imshow("pencv-mixed-clone-example.jpg", mixed_clone)
+    # cv2.waitKey()
+    return mixed_clone
+
+def pic_mix(im,obj):
+
+    im=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+    h,w = obj.shape
+    im[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 - w) // 2 + w] = obj[:, :]
+    im=cv2.GaussianBlur(im,(5,5),0)
+    return im
+
+j=0
 def disImgs(img_list):
     plt.figure()
+    im = cv2.imread('recongnize_history/bg_img.png')
     for i in range(12):
-        tempplate = cv2.imread('recongnize_history/bg_img.png',cv2.IMREAD_GRAYSCALE)
         # img_list[i] = cv2.pyrDown(img_list[i])
-        h,w=img_list[i].shape
+        # w,h=img_list[i].shape
         # tempplate[:,:]=255
         # img_list[i]=cv2.pyrDown(img_list[i])
-        mask=np.zeros(shape=(100,80),dtype=np.uint8)
-        mask[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w]=255
+        # mask=255*np.ones(img_list[i].shape,dtype=img_list[i].dtype)
+        # mask[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w]=255
         # tempplate[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w] = img_list[i][:, :]
         # img_list[i]=cv2.resize(tempplate,(26,26))
         # tempplate[(100 - h) // 2:(100 - h) // 2 + h, (80 - w) // 2:(80 -w ) // 2 + w]=255
         plt.subplot(3,4,i+1)
-        src_1=img_list[i]
-        cv2.seamlessClone(src=src_1,dst=tempplate,mask=mask,p=(100//2,80//2), flags=cv2.NORMAL_CLONE)
-        tempplate=cv2.resize(tempplate,(28,28))
-        plt.imshow(tempplate,cmap='gray')
+        #85,24
+        obj=img_list[i]
+        # cv2.imwrite('char_1.jpg',src_1)
+        # res=seamlessCone(im,obj)
+        res = pic_mix(im, obj)
+        res=cv2.resize(res,(28,28))
+        # global j
+        # j = j + 1
+        # cv2.imwrite(str(i) + '.jpg', res)
+        # cv2.imshow('res',res)
+        plt.imshow(res,cmap='gray')
 
 def last_fun(img):
     copyImg=img.copy()
@@ -169,12 +206,12 @@ def last_fun(img):
     plt.imshow(unflood_img1,cmap='gray')
     # plt.xticks([])
     # plt.yticks([])
-    plt.title("第一次展开,thresh:{0}".format(str(thresh)), fontsize=10)
+    plt.title("第一次展开,thresh:{0}".format(str(thresh)), fontsize=20)
     #绘制直方分布图
     plt.subplot(4, 1, 2)
     ret_max1, ret_theta1, hist1=calcMax(unflood_img1)
     plt.plot(hist1)
-    plt.title('max:{0},theta:{1}'.format(str(ret_max1),str(ret_theta1)),fontsize=10)
+    plt.title('max:{0},theta:{1}'.format(str(ret_max1),str(ret_theta1)),fontsize=20)
 
 
 
@@ -185,13 +222,13 @@ def last_fun(img):
     plt.imshow(unflood_img2,cmap='gray')
     # plt.xticks([])
     # plt.yticks([])
-    plt.title("第二次展开,thresh:{0}".format(str(thresh)), fontsize=10)
+    plt.title("第二次展开,thresh:{0}".format(str(thresh)), fontsize=20)
 
     # 绘制直方分布图
     plt.subplot(4, 1, 4)
     ret_max2, ret_theta2, hist2 = calcMax(unflood_img2)
     plt.plot(hist2)
-    plt.title('max:{0},theta:{1}'.format(str(ret_max2), str(ret_theta2+math.pi/2)), fontsize=10)
+    plt.title('max:{0},theta:{1}'.format(str(ret_max2), str(ret_theta2+math.pi/2)), fontsize=20)
 
     _font_size=20
     #确定展开角度
@@ -210,7 +247,7 @@ def last_fun(img):
     #看圆的半径，得出型号，一个为109，一个为208,208的字符高度为50左右，109的为80左右
     unflood_srcImg=unfloodImagePro(copyImg,point=point,unfloodR=r,width=130,startTheta=theta-0.03)
     if(circle_r>204):
-        unflood_srcImg=unflood_srcImg[50:110,:]
+        unflood_srcImg=unflood_srcImg[40:110,:]
     else:
         unflood_srcImg=unflood_srcImg[0:100,:]
 
@@ -238,7 +275,7 @@ def last_fun(img):
 
     plt.subplot(4, 1, 4)
     #字符切割
-    contours, _ = cv2.findContours(dst_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    _,contours, _ = cv2.findContours(dst_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     count=0
     unflood_srcImg=cv2.cvtColor(unflood_srcImg,cv2.COLOR_GRAY2BGR)
     temp_srcImg=unflood_srcImg.copy()
@@ -253,7 +290,7 @@ def last_fun(img):
         h_thresh=78
         code_high = 25
         code_size = 1.5
-    fun='svm'
+    fun='module'
     import 第四章.模板匹配算法.formated.模板匹配识别字符 as detect
     import 第四章.svm.svm识别字符模型训练 as svm_detect
     img_list=[]
@@ -273,13 +310,13 @@ def last_fun(img):
                 tempImg_1=unflood_srcImg_copy[y-cutNum:y+h+cutNum,x-cutNum:x+w+cutNum,:]
                 tempImg_1=cv2.cvtColor(tempImg_1,cv2.COLOR_RGB2GRAY)
                 img_list.append(tempImg_1)
-                if fun=='moduel':
+                if fun=='module':
                     ret_code=detect.detect_code(tempImg,show_plt=False)
                     unflood_srcImg = cv2.putText(unflood_srcImg, str(ret_code), (x, y + code_high), cv2.FONT_HERSHEY_COMPLEX,code_size, (255, 0, 0), 2)
                 if fun=='svm':
                     # if(tempImg.width>0):
                         ret_code=svm_detect.dettect_code(tempImg)
-                        unflood_srcImg=cv2.putText(unflood_srcImg,str(ret_code),(x,y+code_high),cv2.FONT_HERSHEY_COMPLEX,code_size,(255,0,0),2)
+                        # unflood_srcImg=cv2.putText(unflood_srcImg,str(ret_code),(x,y+code_high),cv2.FONT_HERSHEY_COMPLEX,code_size,(255,0,0),2)
     disImgs(img_list)
     plt.figure()
     plt.imshow(unflood_srcImg)
@@ -293,5 +330,5 @@ def last_fun(img):
 
 
 if __name__=='__main__':
-    img=cv2.imread('OKPictures\\17_34_06.jpg',cv2.IMREAD_GRAYSCALE)
+    img=cv2.imread('OKPictures\\16_50_50.jpg',cv2.IMREAD_GRAYSCALE)
     last_fun(img)
