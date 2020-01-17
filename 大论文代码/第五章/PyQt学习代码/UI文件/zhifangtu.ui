@@ -266,7 +266,7 @@
               <string>彩色图</string>
              </property>
             </widget>
-            <widget class="QPushButton" name="zft_yw_openfile_btn">
+            <widget class="QPushButton" name="btn_openfile_ywzf">
              <property name="geometry">
               <rect>
                <x>230</x>
@@ -940,44 +940,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QFrame" name="frame_4">
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0" colspan="2">
-          <widget class="QWidget" name="widget_toolbar" native="true">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>41</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>41</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QWidget" name="widget_resource_image" native="true"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QWidget" name="widget_hist_1" native="true"/>
-         </item>
-         <item row="2" column="1">
-          <widget class="QWidget" name="widget_adaptAverage_hist" native="true"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QWidget" name="widget_adaptAverage_image" native="true"/>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QVBoxLayout" name="v_Layout_dis"/>
       </item>
      </layout>
     </widget>
