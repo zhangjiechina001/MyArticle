@@ -285,7 +285,9 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
         self.toolBox.setCurrentIndex(0)
+        print(self.btn_openfile_ywzf.sizeHint().width())
         QtCore.QMetaObject.connectSlotsByName(Form)
+        # print(self.btn_openfile_ywzf.sizeHint().width())
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
