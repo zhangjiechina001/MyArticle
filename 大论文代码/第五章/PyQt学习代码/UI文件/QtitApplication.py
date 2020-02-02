@@ -14,6 +14,7 @@ class QuitApplication(QMainWindow):
         mainFrame.setLayout(layout)
         self.setCentralWidget(mainFrame)
         self.button.clicked.connect(self.closeBtnClick)
+        self.button.setToolTip('今天天气不错！')
 
     def closeBtnClick(self):
         sender=self.sender()
