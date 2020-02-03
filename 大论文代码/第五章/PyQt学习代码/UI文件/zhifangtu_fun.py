@@ -41,17 +41,43 @@ class MainWindow(QtWidgets.QWidget,Ui_Form):
         self.widget_toolbar=NavigationToolbar(self.cavas, self.widget)
         self.v_Layout_dis.addWidget(self.widget_toolbar)
         self.v_Layout_dis.addWidget(self.cavas)
-        self.btn
-        self..clicked.connect(self.btn_open_file_ywzf_clicked)
+        # self.btn
+        # self..clicked.connect(self.btn_open_file_ywzf_clicked)
+        self.btn_openFile.clicked.connect(self.btn_open_file_ywzf_clicked)
+        self.label.setText("未连接")    #红色
+        self.label.setStyleSheet("background-color:red;")
+        self.lst_info.addItem('ni   hao')
+        self.btn_connectOPC.clicked.connect(self.connect_opcUA)
+        self.btn_disconnectOPC.clicked.connect(self.disconnect_opcUA)
+        self.radioAyyay=[self.rbn_module,self.rbn_svm,self.rbn_cnn]
+        self.set_axes_title()
         self.statusTip()
+
+    def radio_clicked(self,sender):
+        pass
 
     def open_image_file(self):
         '''打开一个图像文件'''
         fileName, filetype = QFileDialog.getOpenFileName(self,
                                                          "open file", '.',
                                                          "jpg Files (*.jpg);;png Files (*.png);;All Files (*)")
+        item='打开文件:'+fileName
+        self.addItemAndFocusIndex(item)
         return fileName
 
+    def disconnect_opcUA(self):
+        self.label.setText("未连接")  # 红色
+        self.label.setStyleSheet("background-color:red;")
+
+    def connect_opcUA(self):
+        self.label.setText("已连接")    #红色
+        self.label.setStyleSheet("background-color:green;")
+
+    def set_axes_title(self):
+        self.cavas.axes_1.set_title('原图')
+        self.cavas.axes_2.set_title('两次展开位置')
+        self.cavas.axes_3.set_title('形态学操作')
+        self.cavas.axes_4.set_title('定位识别结果')
 
     def btn_open_file_ywzf_clicked(self):
         import numpy as np
@@ -59,12 +85,16 @@ class MainWindow(QtWidgets.QWidget,Ui_Form):
         image=cv2.imread(filename=file_name,flags=cv2.IMREAD_GRAYSCALE)
         #图片显示
         self.cavas.axes_1.imshow(image,cmap='gray')
-        self.cavas.axes_1.set_title('原图')
-        self.cavas.axes_2.hist(image.ravel(),256,[0,255],color='r')
-        self.cavas.axes_2.set_title('直方图')
-        self.cavas.axes_3.hist(image.ravel(),256,[0,255],color='g')
+        # self.cavas.axes_1.set_title('原图')
+        # self.cavas.axes_2.hist(image.ravel(),256,[0,255],color='r')
+        # self.cavas.axes_2.set_title('直方图')
+        # self.cavas.axes_3.hist(image.ravel(),256,[0,255],color='g')
         #在界面上显示
         self.cavas.draw()
+
+    def addItemAndFocusIndex(self,item):
+        self.lst_info.addItem(item)
+        self.lst_info.setCurrentRow(self.lst_info.count()-1)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -7,14 +7,15 @@
       <sourceFolder url="file://$MODULE_DIR$/大论文代码/第三章" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/大论文代码/第三章/window" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/大论文代码/第四章/HED1" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/大论文代码/第五章/PyQt学习代码/UI文件" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/大论文代码/第五章/PyQt学习代码" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/大论文代码/第五章" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/大论文代码/第五章/PyQt学习代码/UI文件" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.7 (cv2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">
+    <option name="projectConfiguration" value="pytest" />
     <option name="PROJECT_TEST_RUNNER" value="pytest" />
   </component>
 </module>
