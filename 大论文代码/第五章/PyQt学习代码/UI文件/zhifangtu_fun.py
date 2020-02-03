@@ -17,10 +17,12 @@ class Mydemo(FigureCanvas):
         plt.rcParams['axes.unicode_minus'] = False
         #创建一个2*2布局的表格
         self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes_1 = self.fig.add_subplot(3, 3, 1)
-        self.axes_2 = self.fig.add_subplot(3, 3, 2)
-        self.axes_3 = self.fig.add_subplot(3, 3, 3)
-        self.axes_4 = self.fig.add_subplot(3, 3, 4)
+        w=2
+        h=2
+        self.axes_1 = self.fig.add_subplot(w, h, 1)
+        self.axes_2 = self.fig.add_subplot(w,h, 2)
+        self.axes_3 = self.fig.add_subplot(w,h, 3)
+        self.axes_4 = self.fig.add_subplot(w,h, 4)
 
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
@@ -39,7 +41,8 @@ class MainWindow(QtWidgets.QWidget,Ui_Form):
         self.widget_toolbar=NavigationToolbar(self.cavas, self.widget)
         self.v_Layout_dis.addWidget(self.widget_toolbar)
         self.v_Layout_dis.addWidget(self.cavas)
-        self.btn_openfile_ywzf.clicked.connect(self.btn_open_file_ywzf_clicked)
+        self.btn
+        self..clicked.connect(self.btn_open_file_ywzf_clicked)
         self.statusTip()
 
     def open_image_file(self):
