@@ -2,6 +2,8 @@ import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import matplotlib.pyplot as plt
+from PyQt5.QtCore import pyqtSignal, QThread
+from PyQt5.QtGui import QImage
 from PyQt5.QtWidgets import QApplication, QSizePolicy, QFileDialog
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
@@ -9,6 +11,44 @@ import cv2
 from matplotlib.figure import Figure
 
 from zhifangtu import Ui_Form
+
+import cv2 as cv
+class DealImgThread(QThread):
+    #定义五个信号
+    #源图像
+    signal_sourceImg=pyqtSignal(QImage)
+    #两次处理的曲线
+    signal_2cut=pyqtSignal(list)
+    #展开并且形态学处理后的图像
+    signal_morphology=pyqtSignal(QImage)
+    #定位识别效果图
+    signal_recongnize_result=pyqtSignal(list)
+    # 识别信息
+    signal_recongnize_info=pyqtSignal(str)
+
+    singoutSource=pyqtSignal(QImage)
+    singoutGarry=pyqtSignal(QImage)
+    singoutHist=pyqtSignal(list)
+    singoutHist_rgb=pyqtSignal(list)
+    def __init__(self,parent=None):
+        super(DealImgThread,self).__init__(parent)
+        self.cv=cv
+        self.cvCap=self.cv.VideoCapture(0)
+        self.garryIsOpen=False
+        self.threadIsOpen=True
+        self.histCatch=0
+        # self.image=
+
+    def openGarry(self):
+        if(self.garryIsOpen==False):
+            self.garryIsOpen=True
+
+    def end(self):
+        if(self.threadIsOpen):
+            self.threadIsOpen=False
+
+
+    def run(self):
 
 #首先定义一个继承自FigureCanvas的类
 class Mydemo(FigureCanvas):
@@ -31,6 +71,7 @@ class Mydemo(FigureCanvas):
         self.fig.tight_layout()
 
 import cv2
+#使用多线程进行控制，后台线程负责数据处理，主线程GUI负责数据显示刷新
 class MainWindow(QtWidgets.QWidget,Ui_Form):
     def __init__(self):
         super(MainWindow,self).__init__()
