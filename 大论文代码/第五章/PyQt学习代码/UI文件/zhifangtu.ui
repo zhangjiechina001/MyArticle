@@ -79,7 +79,7 @@
                 <height>421</height>
                </rect>
               </property>
-              <widget class="QWidget" name="">
+              <widget class="QWidget" name="layoutWidget">
                <property name="geometry">
                 <rect>
                  <x>0</x>
@@ -111,13 +111,29 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QTableWidget" name="tab_recongnizeInfo"/>
+                 <widget class="QTableWidget" name="tab_recongnizeInfo">
+                  <column>
+                   <property name="text">
+                    <string>字符个数</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>识别时间</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>识别结果</string>
+                   </property>
+                  </column>
+                 </widget>
                 </item>
                </layout>
               </widget>
              </widget>
             </widget>
-            <widget class="QWidget" name="">
+            <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
                <x>0</x>
@@ -161,7 +177,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="">
+            <widget class="QWidget" name="layoutWidget">
              <property name="geometry">
               <rect>
                <x>1</x>

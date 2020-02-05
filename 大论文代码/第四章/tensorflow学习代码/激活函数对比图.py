@@ -30,7 +30,7 @@ ax.grid()
 ax.set_title('(a) Sigmoid ',fontsize=charactr_size)
 
 ax = fig.add_subplot(row,col,1+3)
-ax.plot(x,sigmoid(x)*(1-sigmoid(x)),color=color)
+ax.plot(x,sigmoid(x)*(1-sigmoid(x)),label='hello',color=color)
 ax.grid()
 ax.set_title('(d) Sigmoid 导数',fontsize=charactr_size)
 
@@ -65,5 +65,5 @@ ax.set_title('(f) ReLu 导数',fontsize=charactr_size)
 # ax.grid()
 # ax.set_title('(d) Leaky ReLu')
 
-# plt.tight_layout()
+plt.tight_layout()
 plt.show()
