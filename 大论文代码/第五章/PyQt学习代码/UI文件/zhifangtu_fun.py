@@ -15,8 +15,6 @@ from recongnize_image import recongnize_image
 from zhifangtu import Ui_Form
 
 import cv2 as cv
-
-
 class DealImgThread(QThread):
     plt.rcParams['font.sans-serif'] = ['SimHei']  # 显示中文标签
     # 定义五个信号
@@ -33,18 +31,14 @@ class DealImgThread(QThread):
     #识别结果回调
     signal_recongnize_str_result=pyqtSignal(list)
 
-    singoutSource = pyqtSignal(QImage)
-    singoutGarry = pyqtSignal(QImage)
-    singoutHist = pyqtSignal(list)
-    singoutHist_rgb = pyqtSignal(list)
-
-    def __init__(self, parent=None):
+    def __init__(self, parent=None,recongnize_fun=None):
         super(DealImgThread, self).__init__(parent)
         self.image = None
         self.garryIsOpen = False
         self.threadIsOpen = True
         self.histCatch = 0
         self.recongnize = recongnize_image()
+        self.recongnize_fun=recongnize_fun
 
     def get_image(self, img):
         self.image = img
@@ -133,7 +127,7 @@ class DealImgThread(QThread):
             h_thresh = 78
             code_high = 25
             code_size = 1.5
-        fun = 'template matching'
+        fun = self.recongnize_fun
         import 第四章.模板匹配算法.formated.模板匹配识别字符 as detect
         import 第四章.svm.svm识别字符模型训练 as svm_detect
         img_list = []
@@ -172,10 +166,9 @@ class DealImgThread(QThread):
         totalMs = str((end - start).total_seconds()*1000)[0:8]
         self.signal_recongnize_str_result.emit([count,totalMs,ret_str])
 
-
 # 首先定义一个继承自FigureCanvas的类
 class Mydemo(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=256):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
         plt.rcParams['font.family'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
         # 创建一个2*2布局的表格
@@ -192,11 +185,14 @@ class Mydemo(FigureCanvas):
         FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
         self.fig.tight_layout()
+        #设置识别方法SVM或者模板匹配
+
+# #创建一个和opcua通讯相关的类
+# class opcua_communication():
+
 
 
 import cv2
-
-
 # 使用多线程进行控制，后台线程负责数据处理，主线程GUI负责数据显示刷新
 class MainWindow(QtWidgets.QWidget, Ui_Form):
     def __init__(self):
@@ -205,7 +201,7 @@ class MainWindow(QtWidgets.QWidget, Ui_Form):
         self.vlayout = QtWidgets.QVBoxLayout(self)
         # 创建图表的实例
         self.cavas = Mydemo(width=5, height=4, dpi=100)
-        self.widget_toolbar = NavigationToolbar(self.cavas,self.widget_4)
+        self.widget_toolbar = NavigationToolbar(self.cavas,self.widget_5)
         self.v_Layout_dis.addWidget(self.widget_toolbar)
         self.v_Layout_dis.addWidget(self.cavas)
         self.btn_openFile.clicked.connect(self.btn_open_file_ywzf_clicked)
@@ -308,9 +304,18 @@ class MainWindow(QtWidgets.QWidget, Ui_Form):
         self.lst_info.setCurrentRow(self.lst_info.count() - 1)
 
     def openThread(self):
-        if (self.cvThread.isRunning() == False):
-            self.cvThread.start()
+        #template matching
+        self.recongnize_fun = 'template matching'
+        if(self.rbn_module.isChecked()):
+            self.recongnize_fun='template matching'
+        elif(self.rbn_svm.isChecked()):
+            self.recongnize_fun='svm'
+        elif(self.rbn_cnn.isChecked()):
+            self.recongnize_fun='template matching'
 
+        if (self.cvThread.isRunning() == False):
+            self.cvThread.recongnize_fun=self.recongnize_fun
+            self.cvThread.start()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
