@@ -15,6 +15,57 @@ from recongnize_image import recongnize_image
 from zhifangtu import Ui_Form
 
 import cv2 as cv
+from opcua import ua, Server
+
+class ua_server():
+    #初始化opcua，订阅时间和触发事件方法
+    def __init__(self):
+        # setup our server
+        self.server = Server()
+        self.server.set_endpoint("opc.tcp://0.0.0.0:4840/freeopcua/server/")
+        # setup our own namespace, not really necessary but should as spec
+        uri = "http://examples.freeopcua.github.io"
+        self.idx = self.server.register_namespace(uri)
+        self.init_event()
+        self.init_value_change()
+
+
+    def init_event(self):
+        # get Objects node, this is where we should put our custom stuff
+        objects = self.server.get_objects_node()
+
+        # populating our address space
+        myobj = objects.add_object(self.idx, "MyObject")
+
+        # Creating a custom event: Approach 1
+        # The custom event object automatically will have members from its parent (BaseEventType)
+        etype = self.server.create_custom_event_type(self.idx, 'MyFirstEvent', ua.ObjectIds.BaseEventType,
+                                                [('MyNumericProperty', ua.VariantType.Float),
+                                                 ('MyStringProperty', ua.VariantType.String)])
+        self.myevgen = self.server.get_event_generator(etype, myobj)
+        #配置数据监测
+        # 取得根节点
+        # objects = self.server.get_objects_node()
+        # 添加自我节点
+        # myobj = objects.add_object(self.idx, "MyObject")
+        self.myvar = myobj.add_variable(self.idx, "my_change_data", ua.Variant(0, ua.VariantType.ByteString))
+        self.myvar.set_writable()
+        self.server.start()
+
+    def init_value_change(self):
+        pass
+
+    def trigger_event(self,message):
+        self.myevgen.event.Message = ua.LocalizedText(message)
+        self.myevgen.event.Severity = 0
+        self.myevgen.event.MyNumericProperty = 0
+        self.myevgen.event.MyStringProperty = "Property " + str(0)
+        self.myevgen.trigger()
+
+    def trigger_data_value(self,message):
+        self.myvar.set_value(message)
+
+
 class DealImgThread(QThread):
     plt.rcParams['font.sans-serif'] = ['SimHei']  # 显示中文标签
     # 定义五个信号
@@ -190,8 +241,6 @@ class Mydemo(FigureCanvas):
 # #创建一个和opcua通讯相关的类
 # class opcua_communication():
 
-
-
 import cv2
 # 使用多线程进行控制，后台线程负责数据处理，主线程GUI负责数据显示刷新
 class MainWindow(QtWidgets.QWidget, Ui_Form):
@@ -221,6 +270,7 @@ class MainWindow(QtWidgets.QWidget, Ui_Form):
         self.cvThread.signal_recongnize_result.connect(self.result_image_display)
         self.cvThread.signal_recongnize_str_result.connect(self.result_tab_item_add)
         self.btn_reconginze.clicked.connect(self.openThread)
+        self.ua_server=ua_server()
 
     def result_tab_item_add(self,items):
         #获取tab行数
@@ -300,6 +350,8 @@ class MainWindow(QtWidgets.QWidget, Ui_Form):
         self.cvThread.get_image(image)
 
     def addItemAndFocusIndex(self, item):
+        self.ua_server.trigger_event(str(item))
+        self.ua_server.trigger_data_value(str(item))
         self.lst_info.addItem(item)
         self.lst_info.setCurrentRow(self.lst_info.count() - 1)
 
