@@ -18,7 +18,7 @@ import cv2 as cv
 from opcua import ua, Server
 
 class ua_server():
-    #初始化opcua，订阅时间和触发事件方法
+    #初始化opcua，订阅事件和触发事件方法
     def __init__(self):
         # setup our server
         self.server = Server()
@@ -28,7 +28,6 @@ class ua_server():
         self.idx = self.server.register_namespace(uri)
         self.init_event()
         self.init_value_change()
-
 
     def init_event(self):
         # get Objects node, this is where we should put our custom stuff
