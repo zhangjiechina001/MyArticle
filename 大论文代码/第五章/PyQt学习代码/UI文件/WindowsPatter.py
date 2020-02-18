@@ -12,6 +12,7 @@ class WindowsStyleDemo(QWidget):
         self.setWindowTitle('设置窗口的样式')
 
         self.resize(500,300)
+        #保持窗口保持在前
         self.setWindowFlags(
             QtCore.Qt.WindowMaximizeButtonHint | QtCore.Qt.WindowStaysOnTopHint)
         # self.setWindowFlags(QtCore.Qt.WindowMaximizeButtonHint|QtCore.Qt.WindowStaysOnTopHint|QtCore.Qt.FramelessWindowHint)
