@@ -10,12 +10,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtSql import *
 
 def initModel(model):
-    model.setTable('people')
+    model.setTable('people2')
     model.setEditStrategy(QSqlTableModel.OnFieldChange)
     model.select()
     model.setHeaderData(0,Qt.Horizontal,'ID')
-    model.setHeaderData(1, Qt.Horizontal, '姓名')
-    model.setHeaderData(2, Qt.Horizontal, '地址')
+    model.setHeaderData(1, Qt.Horizontal, 'name')
+    model.setHeaderData(2, Qt.Horizontal, 'adress')
+    return model
 
 def createView(title,model):
     view=QTableView()
@@ -26,6 +27,7 @@ def createView(title,model):
 def findrow(i):
     delrow=i.row()
     print('del row=%s'%str(delrow))
+
 def addRow():
     ret=model.insertRows(model.rowCount(),1)
     print('insert Row=%s'%str(ret))
@@ -38,7 +40,7 @@ if __name__=='__main__':
     db.setDatabaseName('./db/database.db')
     model=QSqlTableModel()
     delrow=-1
-    initModel(model)
+    model=initModel(model)
     view=createView('展示数据',model)
     view.clicked.connect(findrow)
     dlg=QDialog()
